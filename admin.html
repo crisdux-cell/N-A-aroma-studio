@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="imagenes/logo.png">
+    <link rel="apple-touch-icon" href="imagenes/logo.png">
+    <title>N&A aroma studio - Panel de Administración</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Prevenir zoom excesivo al tocar inputs en iPhone / Safari */
+        input, select, textarea {
+            font-size: 16px !important;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #334155;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-amber-400 selection:text-slate-950 pb-16 lg:pb-8">
+
+    <!-- BARRA DE NAVEGACIÓN SUPERIOR (RESPONSIVE) -->
+    <nav class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-md">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4">
+            
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border border-amber-500/50 shadow-md shadow-amber-500/20 flex-shrink-0 bg-black flex items-center justify-center">
+                    <img src="imagenes/logo.png" alt="Logo N&A" class="w-full h-full object-cover">
+                </div>
+                <div class="min-w-0">
+                    <h1 class="text-sm sm:text-lg font-bold text-white flex items-center gap-1.5 truncate">
+                        N&A aroma studio
+                    </h1>
+                    <p class="text-[10px] sm:text-xs text-slate-400 truncate">
+                        Panel de Administración
+                    </p>
+                </div>
+            </div>
+
+            <!-- BOTONES DE ACCIÓN RÁPIDA -->
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <!-- Botón Nube Firebase (Sincronización PC ⇄ Celular) -->
+                <button onclick="openCloudModal()" id="cloudStatusBtn" 
+                        title="Sincronización en la nube (PC ⇄ Teléfono)"
+                        class="px-2.5 sm:px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/40 text-xs font-bold shadow transition flex items-center gap-1.5 active:scale-95">
+                    <span id="cloudStatusDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    <i class="fa-solid fa-cloud text-xs sm:text-sm"></i>
+                    <span class="hidden xs:inline" id="cloudStatusText">Nube (PC ⇄ Cel)</span>
+                </button>
+
+                <!-- Botón Ver Catálogo -->
+                <a href="catalogo.html" target="_blank" 
+                   class="px-2.5 sm:px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow transition flex items-center gap-1.5 active:scale-95">
+                    <i class="fa-solid fa-eye"></i>
+                    <span class="hidden sm:inline">Ver Tienda</span>
+                </a>
+
+                <!-- Guardar archivo -->
+                <button onclick="downloadUpdatedDataFile()" 
+                        title="Descarga el archivo productos.js para guardar tus cambios"
+                        class="px-2.5 sm:px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold shadow transition flex items-center gap-1.5 active:scale-95">
+                    <i class="fa-solid fa-download text-emerald-400"></i>
+                    <span class="hidden md:inline">Respaldar JS</span>
+                </button>
+
+                <!-- Ajustes WhatsApp -->
+                <button onclick="openConfigModal()" 
+                        class="p-2 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs flex items-center gap-1.5 active:scale-95">
+                    <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i>
+                    <span class="hidden md:inline font-mono font-bold" id="topbarPhone">04122959390</span>
+                </button>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- BANNER DE SINCRONIZACIÓN DINÁMICO (LOCAL O NUBE) -->
+    <div id="syncBanner" class="bg-gradient-to-r from-amber-950/80 via-slate-900 to-amber-950/80 border-b border-amber-500/30 px-3 sm:px-6 py-2.5 text-xs text-amber-200">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2">
+                <span id="syncBannerDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse flex-shrink-0"></span>
+                <span id="syncBannerText">
+                    <strong>Sincronización PC ⇄ Teléfono:</strong> Conecta Firebase para que todo lo que edites o montes en PC se vea al instante en teléfonos (y viceversa) sin tocar Netlify.
+                </span>
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
+                <button onclick="openCloudModal()" id="syncBannerBtn" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs flex items-center gap-1.5 shadow transition active:scale-95">
+                    <i class="fa-solid fa-cloud"></i>
+                    <span id="syncBannerBtnText">Conectar Nube en 1 min</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
+
+        <!-- RESUMEN DE INVENTARIO (TARJETAS KPI) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mb-6">
+            
+            <div class="bg-slate-900 border border-slate-800 p-3 sm:p-4 rounded-2xl flex items-center gap-2.5 sm:gap-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-base sm:text-lg flex-shrink-0">
+                    <i class="fa-solid fa-bottle-droplet"></i>
+                </div>
+                <div class="min-w-0">
+                    <span class="text-[10px] sm:text-xs text-slate-400 block truncate">Total Fragancias</span>
+                    <p id="statTotal" class="text-lg sm:text-2xl font-black text-white">0</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 p-3 sm:p-4 rounded-2xl flex items-center gap-2.5 sm:gap-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base sm:text-lg flex-shrink-0">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="min-w-0">
+                    <span class="text-[10px] sm:text-xs text-slate-400 block truncate">Disponibles</span>
+                    <p id="statAvailable" class="text-lg sm:text-2xl font-black text-emerald-400">0</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 p-3 sm:p-4 rounded-2xl flex items-center gap-2.5 sm:gap-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-base sm:text-lg flex-shrink-0">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div class="min-w-0">
+                    <span class="text-[10px] sm:text-xs text-slate-400 block truncate">Agotadas</span>
+                    <p id="statSoldOut" class="text-lg sm:text-2xl font-black text-rose-400">0</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 p-3 sm:p-4 rounded-2xl flex items-center gap-2.5 sm:gap-3 cursor-pointer hover:border-amber-500/40 transition" onclick="openConfigModal()">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-base sm:text-lg flex-shrink-0">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+                <div class="min-w-0">
+                    <span class="text-[10px] sm:text-xs text-slate-400 block truncate">WhatsApp Pedidos</span>
+                    <p id="statPhone" class="text-xs sm:text-sm font-bold text-amber-400 truncate">04122959390</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ESTRUCTURA PRINCIPAL EN 2 COLUMNAS (FORMULARIO Y LISTA DE PRODUCTOS) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- COLUMNA 1: FORMULARIO PARA MONTAR O EDITAR COLONIAS -->
+            <div id="formSection" class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-6 shadow-xl sticky lg:top-20">
+                
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <div id="formIcon" class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                        <div>
+                            <h2 id="formTitle" class="text-base sm:text-lg font-bold text-white">Montar Nueva Colonia</h2>
+                            <p class="text-[11px] text-slate-400">Rellena los datos para el catálogo</p>
+                        </div>
+                    </div>
+                    <button id="btnCancelEdit" onclick="resetForm()" class="hidden text-xs text-slate-400 hover:text-rose-400 underline font-semibold">
+                        Cancelar
+                    </button>
+                </div>
+
+                <form id="perfumeForm" novalidate onsubmit="handleFormSubmit(event)" class="space-y-3.5">
+                    <input type="hidden" id="editPerfumeId" value="">
+
+                    <!-- Nombre del perfume -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">
+                            Nombre de la Colonia / Fragancia: *
+                        </label>
+                        <input type="text" id="inputName" required 
+                               placeholder="Ej: Lion Versatile - Inspirado en Eros Versace"
+                               class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm">
+                    </div>
+
+                    <!-- Categoría de la fragancia -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">
+                            Categoría: *
+                        </label>
+                        <select id="inputCategory" required 
+                                class="w-full px-3 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white focus:outline-none focus:border-amber-400 text-sm font-semibold">
+                            <option value="Hombre">👔 Hombre</option>
+                            <option value="Mujer">👗 Mujer</option>
+                            <option value="Unisex">💎 Unisex</option>
+                        </select>
+                    </div>
+
+                    <!-- Precios Duales: Dólares ($) y Bolívares (Bs.) -->
+                    <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2">
+                        <label class="block text-xs font-extrabold text-slate-200">
+                            💵 Precios de Venta:
+                        </label>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-amber-400 mb-1">
+                                    Precio en Divisas ($ USD): *
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-amber-400 font-bold text-sm">$</span>
+                                    <input type="number" step="0.01" min="0" id="inputPrice" required 
+                                           placeholder="12.00"
+                                           class="w-full pl-7 pr-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm font-bold">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-emerald-400 mb-1">
+                                    Precio en Bolívares (Bs.):
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-emerald-400 font-bold text-xs">Bs.</span>
+                                    <input type="number" step="0.01" min="0" id="inputPriceBs" 
+                                           placeholder="20000.00"
+                                           class="w-full pl-8 pr-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 text-sm font-bold">
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-400">
+                            💡 Si colocas ambos, tus clientes verán el precio en dólares ($) y en bolívares (Bs.) al mismo tiempo.
+                        </p>
+                    </div>
+
+                    <!-- SELECTOR DE DISPONIBILIDAD (DISPONIBLE / AGOTADO) -->
+                    <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/80">
+                        <label class="block text-xs font-extrabold text-slate-200 mb-2">
+                            Disponibilidad en Stock: *
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-700 cursor-pointer transition has-[:checked]:bg-emerald-950/70 has-[:checked]:border-emerald-500 active:scale-95">
+                                <input type="radio" name="inputStatus" value="disponible" checked class="accent-emerald-500 w-4 h-4">
+                                <div class="text-xs">
+                                    <span class="font-black text-emerald-400 block">🟢 Disponible</span>
+                                    <span class="text-[10px] text-slate-400">Listo para vender</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-700 cursor-pointer transition has-[:checked]:bg-rose-950/70 has-[:checked]:border-rose-500 active:scale-95">
+                                <input type="radio" name="inputStatus" value="agotado" class="accent-rose-500 w-4 h-4">
+                                <div class="text-xs">
+                                    <span class="font-black text-rose-400 block">🔴 Agotado</span>
+                                    <span class="text-[10px] text-slate-400">Sin existencias</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- FOTO DE LA COLONIA (OPTIMIZADA PARA CÁMARA DE CELULAR Y PC) -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">
+                            Foto de la Colonia:
+                        </label>
+
+                        <!-- Pestañas de origen de imagen -->
+                        <div class="flex gap-2 mb-2">
+                            <button type="button" onclick="switchImageTab('file')" id="tabBtnFile" 
+                                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition active:scale-95">
+                                <i class="fa-solid fa-camera mr-1"></i> Cámara o Galería
+                            </button>
+                            <button type="button" onclick="switchImageTab('url')" id="tabBtnUrl" 
+                                    class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:text-white transition active:scale-95">
+                                <i class="fa-solid fa-link mr-1"></i> Enlace Web (URL)
+                            </button>
+                        </div>
+
+                        <!-- Opción Archivo / Cámara -->
+                        <div id="imageMethodFile" class="space-y-2">
+                            <label class="border-2 border-dashed border-slate-700 hover:border-amber-400/80 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition bg-slate-800/40 text-center active:bg-slate-800/80">
+                                <i class="fa-solid fa-camera text-2xl text-amber-400 mb-1.5"></i>
+                                <span class="text-xs font-bold text-slate-200">Toca para tomar foto o elegir de la galería</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5">Compatible con iPhone, Android y PC (Se comprime automáticamente)</span>
+                                <!-- Input file con accept="image/*" para disparar cámara o fototeca -->
+                                <input type="file" id="inputFileUpload" accept="image/*" onchange="handleImageFileSelect(event)" class="hidden">
+                            </label>
+                        </div>
+
+                        <!-- Opción URL o Ruta Local -->
+                        <div id="imageMethodUrl" class="hidden space-y-2">
+                            <input type="text" id="inputImageUrl" 
+                                   placeholder="https://ejemplo.com/foto.jpg o imagenes/foto.png"
+                                   oninput="updateImagePreview(this.value)"
+                                   class="w-full px-3 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm">
+                        </div>
+
+                        <!-- Previsualización -->
+                        <div id="imagePreviewContainer" class="mt-2 relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 h-32 sm:h-36 flex items-center justify-center">
+                            <img id="imagePreview" src="" alt="Previsualización" class="hidden w-full h-full object-contain">
+                            <div id="imagePlaceholder" class="text-center text-slate-500 text-xs px-2">
+                                <i class="fa-solid fa-image text-2xl mb-1 block"></i>
+                                <span>Sin foto seleccionada (se asignará foto por defecto)</span>
+                            </div>
+                            <button type="button" id="btnClearImage" onclick="clearSelectedImage()" 
+                                    class="hidden absolute top-2 right-2 w-7 h-7 rounded-full bg-rose-600 text-white text-xs flex items-center justify-center hover:bg-rose-500 shadow">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Notas Olfativas / Descripción -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">
+                            Notas Aromáticas / Descripción (Opcional):
+                        </label>
+                        <textarea id="inputDescription" rows="2" 
+                                  placeholder="Ej: Manzana verde fresca, menta y notas de cedro con vainilla."
+                                  class="w-full px-3 py-2 rounded-xl bg-slate-800/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm custom-scrollbar"></textarea>
+                    </div>
+
+                    <!-- Etiqueta opcional -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">
+                            Etiqueta Destacada (Opcional):
+                        </label>
+                        <select id="inputBadge" 
+                                class="w-full px-3 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white focus:outline-none focus:border-amber-400 text-sm">
+                            <option value="">Ninguna</option>
+                            <option value="Más Vendido">🔥 Más Vendido</option>
+                            <option value="Nuevo">✨ Nuevo</option>
+                            <option value="Oferta">🏷️ En Oferta</option>
+                        </select>
+                    </div>
+
+                    <!-- Botón Enviar -->
+                    <div class="pt-1">
+                        <button type="submit" id="btnSubmit" 
+                                class="w-full py-3.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 active:scale-95">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            <span id="btnSubmitText">Guardar y Publicar Colonia</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- COLUMNA 2: GESTIÓN DE INVENTARIO Y CAMBIO RÁPIDO DE STOCK -->
+            <div class="lg:col-span-7 space-y-3.5">
+                
+                <!-- Buscador y filtro del inventario -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
+                    <div class="relative flex-grow">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="adminSearchInput" oninput="renderAdminList()" 
+                               placeholder="Buscar en tu inventario..." 
+                               class="w-full pl-8 pr-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <select id="adminStatusFilter" onchange="renderAdminList()" 
+                                class="px-2.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-amber-400 font-semibold">
+                            <option value="all">Ver: Todos</option>
+                            <option value="disponible">🟢 Disponibles</option>
+                            <option value="agotado">🔴 Agotados</option>
+                        </select>
+
+                        <button onclick="backupCatalogJSON()" title="Descargar copia de seguridad en JSON" 
+                                class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs active:scale-95">
+                            <i class="fa-solid fa-file-export"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lista de Fragancias -->
+                <div id="adminPerfumeList" class="space-y-2.5">
+                    <!-- Filas renderizadas por JS -->
+                </div>
+
+                <!-- Mensaje vacío -->
+                <div id="adminEmptyState" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center">
+                    <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-2"></i>
+                    <p class="text-slate-300 font-bold text-sm">No se encontraron colonias</p>
+                    <p class="text-xs text-slate-500 mt-1">Usa el formulario para montar una nueva fragancia.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- BOTÓN FLOTANTE EN CELULARES PARA SALTAR AL FORMULARIO DE AGREGAR -->
+    <button onclick="scrollToForm()" 
+            class="fixed bottom-4 right-4 z-20 lg:hidden w-13 h-13 p-3.5 rounded-full bg-amber-500 text-slate-950 font-bold shadow-2xl shadow-amber-500/50 flex items-center justify-center text-lg active:scale-90 transition border-2 border-slate-950"
+            title="Montar nueva colonia">
+        <i class="fa-solid fa-plus"></i>
+    </button>
+
+    <!-- MODAL AJUSTES DE WHATSAPP -->
+    <div id="configModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 relative shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-white text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-gear text-amber-400"></i>
+                    Ajustes de WhatsApp y Tienda
+                </h3>
+                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveStoreConfig(event)" class="space-y-3 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">
+                        Número de WhatsApp para pedidos: *
+                    </label>
+                    <input type="text" id="configPhone" required 
+                           placeholder="04122959390"
+                           class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-mono font-bold">
+                    <p class="text-[11px] text-slate-400 mt-1">
+                        💡 Puedes escribirlo como <code>04122959390</code> o <code>584122959390</code>. El sistema lo formatea automáticamente.
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">
+                        Nombre de la Tienda:
+                    </label>
+                    <input type="text" id="configStoreName" 
+                           placeholder="N&A aroma studio"
+                           class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">
+                        Eslogan o Frase:
+                    </label>
+                    <input type="text" id="configTagline" 
+                           placeholder="Inspiraciones de lujo & fragancias exclusivas"
+                           class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white">
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2 border-t border-slate-800">
+                    <button type="button" onclick="closeConfigModal()" class="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold">
+                        Guardar Ajustes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURACIÓN DE FIREBASE (SINCRONIZACIÓN EN LA NUBE) -->
+    <div id="cloudModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50 overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-4 sm:p-6 space-y-4 relative shadow-2xl my-auto">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-sm sm:text-base">Sincronización en la Nube</h3>
+                        <p class="text-[11px] text-slate-400">Edita en PC o Celular y actualiza todo en 1 segundo</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeCloudModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Estado de conexión actual -->
+            <div id="cloudStatusCard" class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <span id="cloudStatusIndicatorDot" class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
+                    <div>
+                        <span id="cloudStatusTitle" class="text-xs font-bold text-white block">Estado: Pendiente de Conectar</span>
+                        <span id="cloudStatusSubtitle" class="text-[10px] text-slate-400">Funciona localmente en este dispositivo</span>
+                    </div>
+                </div>
+                <button type="button" id="btnSyncToCloudNow" onclick="uploadCurrentDataToCloud()" class="hidden px-2.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] items-center gap-1 active:scale-95 shadow">
+                    <i class="fa-solid fa-arrow-up-from-bracket"></i> Subir Todo
+                </button>
+            </div>
+
+            <!-- Formulario de configuración -->
+            <form onsubmit="handleSaveCloudConfig(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">
+                        URL de la Base de Datos Firebase: *
+                    </label>
+                    <input type="text" id="inputFirebaseDbUrl" 
+                           placeholder="https://tu-proyecto-default-rtdb.firebaseio.com"
+                           class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-mono text-xs placeholder-slate-500 focus:outline-none focus:border-amber-400">
+                    <p class="text-[11px] text-slate-400 mt-1">
+                        💡 Es el enlace que termina en <code>.firebaseio.com</code> que te da Google Firebase.
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">
+                        O pega la configuración completa de Firebase (Opcional):
+                    </label>
+                    <textarea id="inputFirebaseFullConfig" rows="3"
+                              placeholder='{ "apiKey": "...", "databaseURL": "https://...", "projectId": "..." }'
+                              class="w-full px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white font-mono text-[11px] placeholder-slate-500 focus:outline-none focus:border-amber-400 custom-scrollbar"></textarea>
+                </div>
+
+                <!-- Pasos explicativos rápidos -->
+                <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-3 space-y-1.5 text-[11px] text-slate-300">
+                    <div class="font-bold text-amber-400 flex items-center gap-1">
+                        <i class="fa-solid fa-graduation-cap"></i> ¿Cómo obtener tu enlace en 1 minuto gratis?
+                    </div>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-400 pl-1">
+                        <li>Entra a <a href="https://console.firebase.google.com" target="_blank" class="text-amber-400 underline font-bold">console.firebase.google.com</a> con tu Gmail.</li>
+                        <li>Crea un proyecto (ej: <strong>na-aroma-studio</strong>).</li>
+                        <li>Ve a <strong>Realtime Database</strong> > <strong>Crear base de datos</strong> > selecciona <strong>Modo de prueba</strong>.</li>
+                        <li>Copia el enlace que termina en <code>.firebaseio.com</code> y pégalo arriba.</li>
+                    </ol>
+                </div>
+
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-slate-800">
+                    <button type="button" onclick="downloadConfiguredJsFile()" class="w-full sm:w-auto px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95">
+                        <i class="fa-solid fa-file-code text-amber-400"></i>
+                        <span>Descargar firebase-config.js</span>
+                    </button>
+                    
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <button type="button" onclick="closeCloudModal()" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-400 text-xs">
+                            Cerrar
+                        </button>
+                        <button type="submit" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/20 active:scale-95 flex items-center gap-1.5">
+                            <i class="fa-solid fa-plug"></i>
+                            <span>Guardar y Conectar</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- NOTIFICACIÓN TOAST FLOTANTE -->
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-800 border border-amber-500 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3">
+            <span id="toastIcon" class="text-amber-400 text-lg"><i class="fa-solid fa-circle-check"></i></span>
+            <span id="toastMsg" class="text-xs sm:text-sm font-medium">Acción completada</span>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="productos.js?v=2.2"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js?v=1.0"></script>
+    <script>
+        let appData = loadCatalogData();
+        let currentBase64Image = "";
+        let currentImageTab = "file";
+
+        // Inicializar panel
+        function initAdmin() {
+            if (!appData.config.phone || appData.config.phone === "1234567890") {
+                appData.config.phone = "584122959390";
+                saveCatalogData(appData.perfumes, appData.config);
+            }
+            updateStats();
+            renderAdminList();
+            updateTopBar();
+            updateCloudStatusUI();
+
+            // Si Firebase está configurado, escuchar cambios de otros dispositivos en vivo
+            if (typeof isFirebaseConfigured === 'function' && isFirebaseConfigured()) {
+                listenToCloudCatalog((cloudData) => {
+                    if (cloudData && cloudData.perfumes && Array.isArray(cloudData.perfumes)) {
+                        console.log("☁️ Panel admin sincronizado desde la nube.");
+                        appData.perfumes = cloudData.perfumes;
+                        if (cloudData.config) appData.config = cloudData.config;
+                        updateStats();
+                        renderAdminList();
+                        updateTopBar();
+                    }
+                });
+            }
+        }
+
+        // Función unificada para guardar cambios (local + nube en tiempo real)
+        async function persistCatalogChanges(successMessage) {
+            // 1. Guardar localmente siempre
+            saveCatalogData(appData.perfumes, appData.config);
+            updateStats();
+            renderAdminList();
+
+            // 2. Si la nube está conectada, sincronizar en vivo
+            if (typeof isFirebaseConfigured === 'function' && isFirebaseConfigured()) {
+                try {
+                    await saveCatalogToCloud(appData.perfumes, appData.config);
+                    showToast("☁️ Sincronizado en la nube (Actualizado en todos los teléfonos)");
+                    return;
+                } catch (err) {
+                    console.error("Error al sincronizar con la nube:", err);
+                    showToast("⚠️ Guardado en PC (Fallo conexión nube)");
+                    return;
+                }
+            }
+
+            // Si aún no ha conectado la nube
+            showToast(successMessage || "✅ Guardado localmente");
+        }
+
+        // ==========================================
+        // FUNCIONES DE CONTROL DE LA NUBE (FIREBASE)
+        // ==========================================
+        function updateCloudStatusUI() {
+            const isConfigured = (typeof isFirebaseConfigured === 'function') && isFirebaseConfigured();
+            const btn = document.getElementById('cloudStatusBtn');
+            const dot = document.getElementById('cloudStatusDot');
+            const text = document.getElementById('cloudStatusText');
+            const syncBanner = document.getElementById('syncBanner');
+            const syncDot = document.getElementById('syncBannerDot');
+            const syncText = document.getElementById('syncBannerText');
+            const syncBtn = document.getElementById('syncBannerBtn');
+            const syncBtnText = document.getElementById('syncBannerBtnText');
+
+            const modalDot = document.getElementById('cloudStatusIndicatorDot');
+            const modalTitle = document.getElementById('cloudStatusTitle');
+            const modalSubtitle = document.getElementById('cloudStatusSubtitle');
+            const btnSyncNow = document.getElementById('btnSyncToCloudNow');
+
+            if (isConfigured) {
+                if (btn) btn.className = 'px-2.5 sm:px-3 py-2 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/60 text-xs font-bold shadow transition flex items-center gap-1.5 active:scale-95';
+                if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+                if (text) text.textContent = '🟢 Nube Conectada';
+
+                if (syncBanner) syncBanner.className = 'bg-gradient-to-r from-emerald-950/90 via-slate-900 to-emerald-950/90 border-b border-emerald-500/40 px-3 sm:px-6 py-2.5 text-xs text-emerald-200';
+                if (syncDot) syncDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0';
+                if (syncText) syncText.innerHTML = '<strong>🟢 NUBE ACTIVA:</strong> Todo lo que edites o montes aquí se actualiza al instante en teléfonos y computadoras.';
+                if (syncBtn) syncBtn.className = 'px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs flex items-center gap-1.5 shadow transition active:scale-95';
+                if (syncBtnText) syncBtnText.textContent = 'Ajustes Nube';
+
+                if (modalDot) modalDot.className = 'w-3 h-3 rounded-full bg-emerald-400 animate-pulse';
+                if (modalTitle) modalTitle.textContent = 'Estado: 🟢 Conectado a Firebase';
+                if (modalSubtitle) modalSubtitle.textContent = 'Sincronización en vivo activa entre PC y Teléfonos';
+                if (btnSyncNow) btnSyncNow.classList.remove('hidden');
+            } else {
+                if (btn) btn.className = 'px-2.5 sm:px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/40 text-xs font-bold shadow transition flex items-center gap-1.5 active:scale-95';
+                if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+                if (text) text.textContent = 'Nube (PC ⇄ Cel)';
+
+                if (syncBanner) syncBanner.className = 'bg-gradient-to-r from-amber-950/80 via-slate-900 to-amber-950/80 border-b border-amber-500/30 px-3 sm:px-6 py-2.5 text-xs text-amber-200';
+                if (syncDot) syncDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse flex-shrink-0';
+                if (syncText) syncText.innerHTML = '<strong>Sincronización PC ⇄ Teléfono:</strong> Conecta Firebase para que todo lo que edites o montes en PC se vea al instante en teléfonos (y viceversa) sin tocar Netlify.';
+                if (syncBtn) syncBtn.className = 'px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs flex items-center gap-1.5 shadow transition active:scale-95';
+                if (syncBtnText) syncBtnText.textContent = 'Conectar Nube en 1 min';
+
+                if (modalDot) modalDot.className = 'w-3 h-3 rounded-full bg-amber-400 animate-pulse';
+                if (modalTitle) modalTitle.textContent = 'Estado: Pendiente de Conectar';
+                if (modalSubtitle) modalSubtitle.textContent = 'Funciona localmente en este dispositivo';
+                if (btnSyncNow) btnSyncNow.classList.add('hidden');
+            }
+        }
+
+        function openCloudModal() {
+            const config = (typeof getActiveFirebaseConfig === 'function') ? getActiveFirebaseConfig() : null;
+            if (config && config.databaseURL) {
+                document.getElementById('inputFirebaseDbUrl').value = config.databaseURL;
+            }
+            updateCloudStatusUI();
+            const modal = document.getElementById('cloudModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCloudModal() {
+            const modal = document.getElementById('cloudModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function handleSaveCloudConfig(e) {
+            e.preventDefault();
+            let dbUrl = document.getElementById('inputFirebaseDbUrl').value.trim();
+            const fullConfigText = document.getElementById('inputFirebaseFullConfig').value.trim();
+
+            let finalConfig = {};
+
+            if (fullConfigText) {
+                try {
+                    let cleaned = fullConfigText;
+                    if (cleaned.includes('firebaseConfig =')) {
+                        cleaned = cleaned.split('firebaseConfig =')[1];
+                    }
+                    if (cleaned.includes(';')) {
+                        cleaned = cleaned.split(';')[0];
+                    }
+                    cleaned = cleaned.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":');
+                    finalConfig = JSON.parse(cleaned);
+                } catch (err) {
+                    console.warn("No se pudo parsear texto de configuración completa", err);
+                }
+            }
+
+            if (dbUrl) {
+                dbUrl = dbUrl.replace(/\/catalogo\.json\/?$/, '').replace(/\/+$/, '');
+                finalConfig.databaseURL = dbUrl;
+            }
+
+            if (!finalConfig.databaseURL && !finalConfig.projectId) {
+                alert("Por favor ingresa la URL de tu base de datos Firebase (ej: https://tu-proyecto-default-rtdb.firebaseio.com).");
+                return;
+            }
+
+            try {
+                showToast("☁️ Conectando con Firebase...");
+                saveActiveFirebaseConfig(finalConfig);
+                
+                // Reiniciar instancia de Firebase
+                firebaseDbInstance = null;
+                isFirebaseInitialized = false;
+                initFirebaseApp();
+
+                // Subir catálogo actual de una vez para que quede sincronizado
+                await saveCatalogToCloud(appData.perfumes, appData.config);
+
+                updateCloudStatusUI();
+                closeCloudModal();
+                showToast("🎉 ¡Nube conectada! Tus cambios ya se sincronizan en vivo");
+
+                // Activar escucha de cambios en vivo
+                listenToCloudCatalog((cloudData) => {
+                    if (cloudData && cloudData.perfumes && Array.isArray(cloudData.perfumes)) {
+                        appData = cloudData;
+                        updateStats();
+                        renderAdminList();
+                        updateTopBar();
+                    }
+                });
+            } catch (error) {
+                console.error("Error al conectar Firebase:", error);
+                alert("Hubo un detalle al conectar con Firebase. Revisa que las reglas estén en 'Modo de prueba' (.read: true, .write: true).");
+            }
+        }
+
+        async function uploadCurrentDataToCloud() {
+            try {
+                showToast("☁️ Subiendo productos a la nube...");
+                await saveCatalogToCloud(appData.perfumes, appData.config);
+                showToast("✅ ¡Todo el catálogo sincronizado en la nube!");
+            } catch (e) {
+                alert("Error subiendo datos a la nube: " + e.message);
+            }
+        }
+
+        function downloadConfiguredJsFile() {
+            const config = (typeof getActiveFirebaseConfig === 'function') ? getActiveFirebaseConfig() : DEFAULT_FIREBASE_CONFIG;
+            
+            const fileContent = `// =======================================================\n` +
+                                `// CONFIGURACIÓN Y SINCRONIZACIÓN EN LA NUBE (FIREBASE)\n` +
+                                `// N&A aroma studio - Sincronización en Tiempo Real\n` +
+                                `// Generado: ${new Date().toLocaleString()}\n` +
+                                `// =======================================================\n\n` +
+                                `const FIREBASE_CONFIG_STORAGE_KEY = 'na_aroma_firebase_config';\n\n` +
+                                `const DEFAULT_FIREBASE_CONFIG = ${JSON.stringify(config, null, 4)};\n\n` +
+                                `let firebaseDbInstance = null;\n` +
+                                `let isFirebaseInitialized = false;\n\n` +
+                                `function getActiveFirebaseConfig() {\n` +
+                                `    try {\n` +
+                                `        const local = localStorage.getItem(FIREBASE_CONFIG_STORAGE_KEY);\n` +
+                                `        if (local) {\n` +
+                                `            const parsed = JSON.parse(local);\n` +
+                                `            if (parsed && (parsed.databaseURL || parsed.projectId)) return parsed;\n` +
+                                `        }\n` +
+                                `    } catch (e) {}\n` +
+                                `    return DEFAULT_FIREBASE_CONFIG;\n` +
+                                `}\n\n` +
+                                `function saveActiveFirebaseConfig(config) {\n` +
+                                `    try { localStorage.setItem(FIREBASE_CONFIG_STORAGE_KEY, JSON.stringify(config)); } catch (e) {}\n` +
+                                `}\n\n` +
+                                `function isFirebaseConfigured() {\n` +
+                                `    const config = getActiveFirebaseConfig();\n` +
+                                `    return Boolean(config && (config.databaseURL || config.projectId));\n` +
+                                `}\n\n` +
+                                `function initFirebaseApp() {\n` +
+                                `    if (isFirebaseInitialized && firebaseDbInstance) return firebaseDbInstance;\n` +
+                                `    if (typeof firebase === 'undefined') return null;\n` +
+                                `    const config = getActiveFirebaseConfig();\n` +
+                                `    if (!config || (!config.databaseURL && !config.projectId)) return null;\n` +
+                                `    try {\n` +
+                                `        let app = (!firebase.apps || firebase.apps.length === 0) ? firebase.initializeApp(config) : firebase.app();\n` +
+                                `        firebaseDbInstance = firebase.database(app);\n` +
+                                `        isFirebaseInitialized = true;\n` +
+                                `        return firebaseDbInstance;\n` +
+                                `    } catch (err) {\n` +
+                                `        console.error("Error Firebase:", err);\n` +
+                                `        return null;\n` +
+                                `    }\n` +
+                                `}\n\n` +
+                                `function listenToCloudCatalog(onSuccess, onError) {\n` +
+                                `    const db = initFirebaseApp();\n` +
+                                `    if (!db) return null;\n` +
+                                `    try {\n` +
+                                `        const catalogRef = db.ref('catalogo');\n` +
+                                `        catalogRef.on('value', (snapshot) => {\n` +
+                                `            const data = snapshot.val();\n` +
+                                `            if (data && data.perfumes && Array.isArray(data.perfumes)) {\n` +
+                                `                saveCatalogData(data.perfumes, data.config || DEFAULT_STORE_CONFIG);\n` +
+                                `                if (typeof onSuccess === 'function') onSuccess(data);\n` +
+                                `            }\n` +
+                                `        }, onError);\n` +
+                                `        return catalogRef;\n` +
+                                `    } catch (e) { return null; }\n` +
+                                `}\n\n` +
+                                `async function saveCatalogToCloud(perfumes, config) {\n` +
+                                `    saveCatalogData(perfumes, config);\n` +
+                                `    const db = initFirebaseApp();\n` +
+                                `    if (!db) return false;\n` +
+                                `    try {\n` +
+                                `        const payload = { perfumes, config: config || DEFAULT_STORE_CONFIG, updatedAt: new Date().toISOString() };\n` +
+                                `        await db.ref('catalogo').set(payload);\n` +
+                                `        return true;\n` +
+                                `    } catch (err) { throw err; }\n` +
+                                `}\n`;
+
+            const blob = new Blob([fileContent], { type: "text/javascript" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "firebase-config.js";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast("📥 Descargando firebase-config.js listo para Netlify");
+        }
+
+        function updateTopBar() {
+            const rawPhone = appData.config.phone || "584122959390";
+            let displayPhone = rawPhone;
+            if (rawPhone.startsWith("58") && rawPhone.length === 12) {
+                displayPhone = "0" + rawPhone.slice(2);
+            }
+            document.getElementById('topbarPhone').textContent = displayPhone;
+            document.getElementById('statPhone').textContent = displayPhone;
+        }
+
+        function updateStats() {
+            const total = appData.perfumes.length;
+            const available = appData.perfumes.filter(p => p.status !== 'agotado').length;
+            const soldOut = total - available;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statAvailable').textContent = available;
+            document.getElementById('statSoldOut').textContent = soldOut;
+        }
+
+        // Renderizar lista en panel de administración con botones táctiles
+        function renderAdminList() {
+            const query = document.getElementById('adminSearchInput').value.trim().toLowerCase();
+            const statusFilter = document.getElementById('adminStatusFilter').value;
+
+            const listContainer = document.getElementById('adminPerfumeList');
+            const emptyState = document.getElementById('adminEmptyState');
+
+            const filtered = appData.perfumes.filter(p => {
+                const matchesQuery = !query || 
+                    (p.name && p.name.toLowerCase().includes(query)) ||
+                    (p.category && p.category.toLowerCase().includes(query));
+
+                const isAvail = p.status !== 'agotado';
+                let matchesStatus = true;
+                if (statusFilter === 'disponible') matchesStatus = isAvail;
+                if (statusFilter === 'agotado') matchesStatus = !isAvail;
+
+                return matchesQuery && matchesStatus;
+            });
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            const fallbackImage = 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600';
+
+            listContainer.innerHTML = filtered.map(p => {
+                const isAvailable = p.status !== 'agotado';
+
+                return `
+                    <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition shadow-sm">
+                        
+                        <!-- Miniatura e info -->
+                        <div class="flex items-center gap-3 flex-grow min-w-0 w-full sm:w-auto">
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-slate-950 overflow-hidden flex-shrink-0 border border-slate-800">
+                                <img src="${p.image || fallbackImage}" 
+                                     alt="${p.name}" 
+                                     onerror="this.src='${fallbackImage}'"
+                                     class="w-full h-full object-cover">
+                            </div>
+                            <div class="min-w-0 flex-grow">
+                                <div class="flex items-center gap-1.5 flex-wrap mb-0.5">
+                                    <span class="text-[9px] sm:text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 uppercase font-bold">
+                                        ${p.category || 'General'}
+                                    </span>
+                                    ${p.badge ? `
+                                        <span class="text-[9px] sm:text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
+                                            ${p.badge}
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                <h4 class="font-bold text-white text-xs sm:text-sm truncate" title="${p.name}">${p.name}</h4>
+                                <div class="flex items-center gap-1.5 flex-wrap mt-0.5">
+                                    <span class="text-amber-400 font-black text-xs sm:text-sm">$${Number(p.price).toFixed(2)}</span>
+                                    ${p.priceBs ? `<span class="text-emerald-400 font-bold text-[11px] sm:text-xs">/ Bs. ${Number(p.priceBs).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción táctiles -->
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-800/80">
+                            
+                            <!-- BOTÓN DE CAMBIO DE ESTADO 1 CLIC (DISPONIBLE / AGOTADO) -->
+                            <button onclick="togglePerfumeStatus('${p.id}')" 
+                                    title="Toca para cambiar entre Disponible y Agotado"
+                                    class="flex-grow sm:flex-grow-0 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 active:scale-95 ${
+                                        isAvailable 
+                                            ? 'bg-emerald-950 hover:bg-emerald-900 border border-emerald-600/70 text-emerald-300' 
+                                            : 'bg-rose-950 hover:bg-rose-900 border border-rose-600/70 text-rose-300'
+                                    }">
+                                <i class="fa-solid ${isAvailable ? 'fa-circle-check text-emerald-400' : 'fa-circle-xmark text-rose-400'}"></i>
+                                <span>${isAvailable ? '🟢 Disponible' : '🔴 Agotado'}</span>
+                            </button>
+
+                            <!-- Editar -->
+                            <button onclick="editPerfume('${p.id}')" 
+                                    title="Editar perfume"
+                                    class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center active:scale-95">
+                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                            </button>
+
+                            <!-- Eliminar -->
+                            <button onclick="deletePerfume('${p.id}')" 
+                                    title="Eliminar perfume"
+                                    class="p-2.5 rounded-xl bg-slate-800 hover:bg-rose-900/60 text-slate-400 hover:text-rose-300 transition flex items-center justify-center active:scale-95">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Alternar Disponibilidad con 1 Clic
+        async function togglePerfumeStatus(id) {
+            const index = appData.perfumes.findIndex(p => p.id === id);
+            if (index !== -1) {
+                const currentStatus = appData.perfumes[index].status;
+                const newStatus = (currentStatus === 'agotado') ? 'disponible' : 'agotado';
+                appData.perfumes[index].status = newStatus;
+
+                await persistCatalogChanges(
+                    newStatus === 'disponible' 
+                        ? `🟢 "${appData.perfumes[index].name}" marcada como DISPONIBLE` 
+                        : `🔴 "${appData.perfumes[index].name}" marcada como AGOTADA`
+                );
+            }
+        }
+
+        function switchImageTab(tab) {
+            currentImageTab = tab;
+            const tabFile = document.getElementById('tabBtnFile');
+            const tabUrl = document.getElementById('tabBtnUrl');
+            const fileSection = document.getElementById('imageMethodFile');
+            const urlSection = document.getElementById('imageMethodUrl');
+
+            if (tab === 'file') {
+                tabFile.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition active:scale-95';
+                tabUrl.className = 'px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:text-white transition active:scale-95';
+                fileSection.classList.remove('hidden');
+                urlSection.classList.add('hidden');
+            } else {
+                tabUrl.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition active:scale-95';
+                tabFile.className = 'px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:text-white transition active:scale-95';
+                urlSection.classList.remove('hidden');
+                fileSection.classList.add('hidden');
+            }
+        }
+
+        // Compresor inteligente de fotos en alta definición para teléfonos y PC (Canvas)
+        // Optimiza fotos de hasta 48MP de iPhone o Android manteniendo nitidez impecable y foto completa
+        function compressImageClientSide(file, maxWidth = 1400, maxHeight = 1400, quality = 0.92) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth || height > maxHeight) {
+                            if (width > height) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            } else {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Comprime a JPEG en alta resolución con peso ultra-liviano para la nube
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                        resolve(compressedBase64);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Selección o captura directa de foto desde cámara / fototeca (Foto completa sin recorte)
+        async function handleImageFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showToast("📸 Cargando foto en alta definición...");
+
+            try {
+                // Generar versión completa en alta calidad (1400px @ 0.92) conservando toda la foto intacta
+                const optimizedImage = await compressImageClientSide(file, 1400, 1400, 0.92);
+                currentBase64Image = optimizedImage;
+                updateImagePreview(currentBase64Image);
+                showToast("✨ Foto completa lista en alta calidad");
+            } catch (err) {
+                console.error("Error optimizando imagen", err);
+                alert("Hubo un detalle al cargar la foto. Intenta con otra imagen.");
+            }
+        }
+
+        function updateImagePreview(src) {
+            const img = document.getElementById('imagePreview');
+            const placeholder = document.getElementById('imagePlaceholder');
+            const clearBtn = document.getElementById('btnClearImage');
+
+            if (src && src.trim() !== '') {
+                img.src = src;
+                img.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+                clearBtn.classList.remove('hidden');
+            } else {
+                img.src = '';
+                img.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                clearBtn.classList.add('hidden');
+            }
+        }
+
+        function clearSelectedImage() {
+            currentBase64Image = "";
+            document.getElementById('inputImageUrl').value = "";
+            document.getElementById('inputFileUpload').value = "";
+            updateImagePreview("");
+        }
+
+        // Guardar o Editar
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const editId = document.getElementById('editPerfumeId').value;
+            const name = document.getElementById('inputName').value.trim();
+            const category = document.getElementById('inputCategory').value;
+            const price = parseFloat(document.getElementById('inputPrice').value);
+            const rawPriceBs = document.getElementById('inputPriceBs').value.trim();
+            const priceBs = rawPriceBs ? parseFloat(rawPriceBs) : null;
+            const status = document.querySelector('input[name="inputStatus"]:checked').value;
+            const description = document.getElementById('inputDescription').value.trim();
+            const badge = document.getElementById('inputBadge').value;
+
+            if (!name) {
+                alert("Por favor escribe el nombre de la colonia.");
+                return;
+            }
+            if (isNaN(price) || price < 0) {
+                alert("Por favor escribe un precio válido en dólares ($).");
+                return;
+            }
+
+            // Determinar si hay nueva foto seleccionada
+            let newImage = "";
+            if (currentImageTab === 'file' && currentBase64Image) {
+                newImage = currentBase64Image;
+            } else if (document.getElementById('inputImageUrl').value.trim()) {
+                newImage = document.getElementById('inputImageUrl').value.trim();
+            } else if (currentBase64Image) {
+                newImage = currentBase64Image;
+            }
+
+            if (editId) {
+                const index = appData.perfumes.findIndex(p => String(p.id) === String(editId));
+                if (index !== -1) {
+                    const finalImage = newImage || appData.perfumes[index].image || "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600";
+                    appData.perfumes[index] = {
+                        ...appData.perfumes[index],
+                        name,
+                        category,
+                        price,
+                        priceBs,
+                        status,
+                        image: finalImage,
+                        description,
+                        badge
+                    };
+                    await persistCatalogChanges("✅ Cambios guardados correctamente");
+                } else {
+                    console.error("No se encontró la colonia con id", editId);
+                }
+            } else {
+                const finalImage = newImage || "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600";
+                const newPerfume = {
+                    id: "p_" + Date.now(),
+                    name,
+                    category,
+                    price,
+                    priceBs,
+                    status,
+                    image: finalImage,
+                    description,
+                    badge
+                };
+                appData.perfumes.unshift(newPerfume);
+                await persistCatalogChanges("✨ Nueva colonia publicada en el catálogo");
+            }
+
+            resetForm();
+        }
+
+        function editPerfume(id) {
+            const p = appData.perfumes.find(item => String(item.id) === String(id));
+            if (!p) return;
+
+            document.getElementById('editPerfumeId').value = p.id;
+            document.getElementById('inputName').value = p.name;
+            document.getElementById('inputCategory').value = p.category || 'Hombre';
+            document.getElementById('inputPrice').value = p.price;
+            document.getElementById('inputPriceBs').value = (p.priceBs !== undefined && p.priceBs !== null) ? p.priceBs : '';
+            document.getElementById('inputDescription').value = p.description || '';
+            document.getElementById('inputBadge').value = p.badge || '';
+
+            const statusRadios = document.querySelectorAll('input[name="inputStatus"]');
+            statusRadios.forEach(radio => {
+                radio.checked = (radio.value === (p.status || 'disponible'));
+            });
+
+            if (p.image && p.image.startsWith('data:image')) {
+                currentBase64Image = p.image;
+                document.getElementById('inputImageUrl').value = "";
+                switchImageTab('file');
+                updateImagePreview(p.image);
+            } else if (p.image) {
+                currentBase64Image = "";
+                document.getElementById('inputImageUrl').value = p.image;
+                switchImageTab('url');
+                updateImagePreview(p.image);
+            } else {
+                clearSelectedImage();
+            }
+
+            document.getElementById('formTitle').textContent = "Editar Colonia";
+            document.getElementById('btnSubmitText').textContent = "Guardar Cambios";
+            document.getElementById('btnCancelEdit').classList.remove('hidden');
+            document.getElementById('formIcon').innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+
+            scrollToForm();
+        }
+
+        function scrollToForm() {
+            document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('perfumeForm').reset();
+            document.getElementById('editPerfumeId').value = "";
+            document.getElementById('inputPriceBs').value = "";
+            clearSelectedImage();
+            document.querySelector('input[name="inputStatus"][value="disponible"]').checked = true;
+
+            document.getElementById('formTitle').textContent = "Montar Nueva Colonia";
+            document.getElementById('btnSubmitText').textContent = "Guardar y Publicar Colonia";
+            document.getElementById('btnCancelEdit').classList.add('hidden');
+            document.getElementById('formIcon').innerHTML = '<i class="fa-solid fa-plus"></i>';
+        }
+
+        async function deletePerfume(id) {
+            const p = appData.perfumes.find(item => String(item.id) === String(id));
+            if (!p) return;
+
+            if (confirm(`¿Seguro que deseas eliminar "${p.name}"? Esta acción la quitará del catálogo.`)) {
+                appData.perfumes = appData.perfumes.filter(item => String(item.id) !== String(id));
+                await persistCatalogChanges("🗑️ Colonia eliminada del catálogo");
+            }
+        }
+
+        // Modal WhatsApp y ajustes
+        function openConfigModal() {
+            let phone = appData.config.phone || "584122959390";
+            if (phone.startsWith("58") && phone.length === 12) {
+                phone = "0" + phone.slice(2);
+            }
+            document.getElementById('configPhone').value = phone;
+            document.getElementById('configStoreName').value = appData.config.storeName || "N&A aroma studio";
+            document.getElementById('configTagline').value = appData.config.tagline || "";
+
+            const modal = document.getElementById('configModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeConfigModal() {
+            const modal = document.getElementById('configModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveStoreConfig(e) {
+            e.preventDefault();
+            let phone = document.getElementById('configPhone').value.trim().replace(/\D/g, '');
+            
+            if (phone.startsWith('0') && phone.length === 11) {
+                phone = '58' + phone.substring(1);
+            } else if (!phone.startsWith('58') && phone.length === 10) {
+                phone = '58' + phone;
+            }
+
+            appData.config.phone = phone;
+            appData.config.storeName = document.getElementById('configStoreName').value.trim() || "N&A aroma studio";
+            appData.config.tagline = document.getElementById('configTagline').value.trim() || "";
+
+            await persistCatalogChanges("✅ Ajustes de tienda guardados");
+            updateTopBar();
+            closeConfigModal();
+        }
+
+        function downloadUpdatedDataFile() {
+            const fileContent = `// =======================================================\n` +
+                                `// BASE DE DATOS DE PRODUCTOS Y CONFIGURACIÓN DEL CATÁLOGO\n` +
+                                `// Actualizado el: ${new Date().toLocaleString()}\n` +
+                                `// =======================================================\n\n` +
+                                `const DEFAULT_STORE_CONFIG = ${JSON.stringify(appData.config, null, 4)};\n\n` +
+                                `const INITIAL_PERFUMES = ${JSON.stringify(appData.perfumes, null, 4)};\n\n` +
+                                `const CATALOGO_VERSION = "${Date.now()}";\n\n` +
+                                `function loadCatalogData() {\n` +
+                                `    let savedPerfumes = null;\n` +
+                                `    let savedConfig = null;\n` +
+                                `    try {\n` +
+                                `        const savedVersion = localStorage.getItem('catalogo_version');\n` +
+                                `        if (savedVersion !== CATALOGO_VERSION) {\n` +
+                                `            localStorage.setItem('catalogo_version', CATALOGO_VERSION);\n` +
+                                `            localStorage.setItem('perfumes_catalogo_db', JSON.stringify(INITIAL_PERFUMES));\n` +
+                                `            return { perfumes: INITIAL_PERFUMES, config: DEFAULT_STORE_CONFIG };\n` +
+                                `        }\n` +
+                                `        const rawPerfumes = localStorage.getItem('perfumes_catalogo_db');\n` +
+                                `        if (rawPerfumes) savedPerfumes = JSON.parse(rawPerfumes);\n` +
+                                `    } catch (e) {}\n` +
+                                `    try {\n` +
+                                `        const rawConfig = localStorage.getItem('catalogo_config');\n` +
+                                `        if (rawConfig) savedConfig = JSON.parse(rawConfig);\n` +
+                                `    } catch (e) {}\n` +
+                                `    return {\n` +
+                                `        perfumes: (savedPerfumes && Array.isArray(savedPerfumes)) ? savedPerfumes : INITIAL_PERFUMES,\n` +
+                                `        config: savedConfig ? { ...DEFAULT_STORE_CONFIG, ...savedConfig } : DEFAULT_STORE_CONFIG\n` +
+                                `    };\n` +
+                                `}\n\n` +
+                                `function saveCatalogData(perfumes, config) {\n` +
+                                `    if (perfumes) localStorage.setItem('perfumes_catalogo_db', JSON.stringify(perfumes));\n` +
+                                `    if (config) localStorage.setItem('catalogo_config', JSON.stringify(config));\n` +
+                                `}\n`;
+
+            const blob = new Blob([fileContent], { type: "text/javascript" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "productos.js";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast("📥 Descargando archivo productos.js actualizado");
+        }
+
+        function backupCatalogJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `respaldo_catalogo_${Date.now()}.json`);
+            dlAnchor.click();
+            showToast("📦 Copia de seguridad descargada");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const msgElem = document.getElementById('toastMsg');
+            msgElem.textContent = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        initAdmin();
+    </script>
+</body>
+</html>

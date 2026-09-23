@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Catálogo de perfumes y colonias exclusivas con entrega directa.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="imagenes/logo.png">
+    <link rel="apple-touch-icon" href="imagenes/logo.png">
+    <title>N&A aroma studio - Catálogo Exclusivo</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#f6d365',
+                            500: '#fda085',
+                            600: '#d4af37',
+                            700: '#aa820a'
+                        }
+                    },
+                    screens: {
+                        'xs': '420px',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Optimización táctil y scroll fluido para teléfonos y PC */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Prevenir zoom automático molesto en iPhone al tocar campos de texto */
+        input, select, textarea {
+            font-size: 16px !important;
+        }
+
+        /* Soporte para bordes de pantalla en iPhone (Notch e isla dinámica) */
+        .safe-pb {
+            padding-bottom: env(safe-area-inset-bottom, 1rem);
+        }
+
+        /* Máxima nitidez y aceleración gráfica para fotos de perfumes */
+        .perfume-img {
+            image-rendering: -webkit-optimize-contrast;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        .perfume-img-container:hover .perfume-img {
+            transform: scale(1.06) translateZ(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950">
+
+    <!-- BARRA SUPERIOR DE ANUNCIO MÓVIL Y DESKTOP -->
+    <div class="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-slate-950 text-[11px] sm:text-xs md:text-sm font-bold py-2 px-3 text-center tracking-wide shadow-sm flex items-center justify-center gap-1.5 sm:gap-2">
+        <span>✨ Fragancias de alta duración e inspiración de lujo | Envíos a todo el país</span>
+    </div>
+
+    <!-- ENCABEZADO RESPONSIVE (CELULAR / TABLET / PC) -->
+    <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
+            
+            <!-- Logo y Marca -->
+            <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-amber-500/50 shadow-lg shadow-amber-500/20 flex-shrink-0 bg-black flex items-center justify-center">
+                    <img src="imagenes/logo.png" alt="N&A aroma studio Logo" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h1 id="headerStoreName" class="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-amber-200 bg-clip-text text-transparent truncate max-w-[200px] sm:max-w-none">
+                        N&A aroma studio
+                    </h1>
+                    <p id="headerTagline" class="text-[11px] sm:text-xs text-slate-400 hidden xs:block truncate">
+                        Aroma Studio | Inspiraciones exclusivas de alta fijación
+                    </p>
+                </div>
+            </div>
+
+            <!-- Botón Contacto WhatsApp Header -->
+            <div class="flex items-center gap-2">
+                <a id="btnDirectWhatsapp" href="https://api.whatsapp.com/send?phone=584122959390" target="_blank" 
+                   class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 font-bold text-xs sm:text-sm transition-all duration-200 shadow-sm active:scale-95">
+                    <i class="fa-brands fa-whatsapp text-base sm:text-lg"></i>
+                    <span class="hidden sm:inline">Pedir por WhatsApp</span>
+                    <span class="sm:hidden font-semibold">WhatsApp</span>
+                </a>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 flex-grow w-full">
+
+        <!-- CONTROLES ADAPTADOS PARA MÓVIL Y PC -->
+        <section class="mb-6 space-y-3">
+            
+            <!-- Barra de búsqueda con limpieza instantánea -->
+            <div class="relative w-full">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" oninput="applyFilters()" 
+                       placeholder="Buscar perfume (ej. Versace, Baccarat, Sauvage)..." 
+                       class="w-full pl-10 sm:pl-11 pr-10 py-3 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 text-sm sm:text-base shadow-inner transition">
+                <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Fila de Filtros Desplazable con el dedo (Swipe horizontal en móvil) -->
+            <div class="flex items-center justify-between gap-2 pt-1">
+                
+                <!-- Chips desplazables horizontalmente -->
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 flex-grow pr-2 -mx-1 px-1 touch-pan-x">
+                    <button onclick="setCategoryFilter('all')" data-category="all" 
+                            class="filter-btn active-category px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition border border-amber-500 bg-amber-500 text-slate-950 shadow-md active:scale-95 flex-shrink-0">
+                        ✨ Todos
+                    </button>
+                    <button onclick="setCategoryFilter('Hombre')" data-category="Hombre" 
+                            class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition border border-slate-800 bg-slate-900/90 text-slate-300 hover:text-white hover:border-slate-700 active:scale-95 flex-shrink-0">
+                        👔 Hombre
+                    </button>
+                    <button onclick="setCategoryFilter('Mujer')" data-category="Mujer" 
+                            class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition border border-slate-800 bg-slate-900/90 text-slate-300 hover:text-white hover:border-slate-700 active:scale-95 flex-shrink-0">
+                        👗 Mujer
+                    </button>
+                    <button onclick="setCategoryFilter('Unisex')" data-category="Unisex" 
+                            class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition border border-slate-800 bg-slate-900/90 text-slate-300 hover:text-white hover:border-slate-700 active:scale-95 flex-shrink-0">
+                        💎 Unisex
+                    </button>
+                    <button onclick="toggleOnlyAvailable()" id="btnOnlyAvailable" 
+                            class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition border border-emerald-500/40 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/40 active:scale-95 flex-shrink-0 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>Solo Disponibles</span>
+                    </button>
+                </div>
+
+                <!-- Contador de resultados -->
+                <div class="hidden md:flex items-center gap-1.5 text-xs text-slate-400 font-medium flex-shrink-0">
+                    <span id="resultsCount" class="text-amber-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800">0</span>
+                    <span>fragancias</span>
+                </div>
+            </div>
+
+            <!-- Contador en móvil -->
+            <div class="md:hidden flex items-center justify-between text-[11px] text-slate-400 pt-1 px-1">
+                <span>Mostrando <strong id="resultsCountMobile" class="text-amber-400">0</strong> fragancias</span>
+                <span class="text-slate-500">Toca cualquier perfume para ampliar</span>
+            </div>
+
+        </section>
+
+        <!-- GRILLA DE PRODUCTOS RESPONSIVE (1-2 en Celular, 3 en Tablet, 4 en PC) -->
+        <section id="perfumeGrid" class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
+            <!-- Cargado dinámicamente con JavaScript -->
+        </section>
+
+        <!-- MENSAJE VACÍO CUANDO NO HAY PRODUCTOS -->
+        <div id="noResults" class="hidden text-center py-16 px-4">
+            <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500 text-xl">
+                <i class="fa-solid fa-wind"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-300">No encontramos resultados</h3>
+            <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Prueba con otra palabra o quita los filtros aplicados.</p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition active:scale-95">
+                Ver todos los perfumes
+            </button>
+        </div>
+
+    </main>
+
+    <!-- BOTÓN FLOTANTE DE WHATSAPP EN MÓVIL (Con acceso rápido sin tapar contenido) -->
+    <a id="floatingWhatsappBtn" href="https://api.whatsapp.com/send?phone=584122959390" target="_blank" 
+       class="fixed bottom-5 right-4 z-40 sm:hidden w-14 h-14 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-2xl shadow-2xl shadow-emerald-500/50 active:scale-90 transition border-2 border-slate-950"
+       title="Consultar por WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span class="absolute -top-1 -right-1 flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
+        </span>
+    </a>
+
+    <!-- MODAL DETALLE DE PRODUCTO ADAPTADO A PANTALLAS TÁCTILES -->
+    <div id="quickViewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 z-50 transition-opacity">
+        <div class="bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto custom-scrollbar shadow-2xl relative animate-in fade-in slide-in-from-bottom duration-200">
+            
+            <!-- Barra para deslizar y cerrar en móvil -->
+            <div class="sm:hidden w-12 h-1.5 bg-slate-700 rounded-full mx-auto my-3 cursor-pointer" onclick="closeQuickView()"></div>
+
+            <button onclick="closeQuickView()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-slate-800/80 text-slate-300 hover:text-white flex items-center justify-center z-30 shadow-md">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+            
+            <!-- Contenedor de Foto Completa de la Colonia (Nunca recortada) -->
+            <div class="w-full min-h-[300px] sm:min-h-[360px] max-h-[56vh] sm:max-h-[60vh] bg-slate-950 relative overflow-hidden flex items-center justify-center p-3 sm:p-4 border-b border-slate-800">
+                <!-- Fondo ambiental difuminado para rellenar bordes con la paleta de la propia colonia -->
+                <img id="modalImgBg" src="" alt="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-25 scale-110 pointer-events-none">
+                
+                <!-- Imagen 100% completa del frasco sin recortes -->
+                <img id="modalImg" src="" alt="" 
+                     onclick="openLightbox(this.src)" 
+                     class="relative z-10 max-w-full max-h-[50vh] sm:max-h-[54vh] w-auto h-auto object-contain rounded-2xl drop-shadow-2xl cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
+                     title="Toca para ver la foto en pantalla completa">
+
+                <!-- Badge de Estado o Promoción -->
+                <div id="modalBadgeContainer" class="absolute top-3 left-3 z-20"></div>
+
+                <!-- Botón táctil para ampliar foto a pantalla completa -->
+                <button type="button" onclick="openLightbox(document.getElementById('modalImg').src)" 
+                        class="absolute bottom-3 right-3 z-20 px-3 py-1.5 rounded-xl bg-slate-900/85 hover:bg-slate-800 text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 backdrop-blur-md border border-slate-700/80 shadow-lg active:scale-95 transition">
+                    <i class="fa-solid fa-expand text-amber-400"></i>
+                    <span>Ver foto completa</span>
+                </button>
+            </div>
+
+            <div class="p-5 sm:p-6 space-y-4 safe-pb">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <span id="modalCategory" class="text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded bg-slate-800 text-amber-400 border border-slate-700 uppercase tracking-wider"></span>
+                        <h3 id="modalName" class="text-lg sm:text-2xl font-extrabold text-white mt-1.5 leading-tight"></h3>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Precio</span>
+                        <p id="modalPrice" class="text-xl sm:text-2xl font-black text-amber-400"></p>
+                    </div>
+                </div>
+
+                <div id="modalDescription" class="text-slate-300 text-xs sm:text-sm leading-relaxed border-t border-slate-800 pt-3"></div>
+
+                <div id="modalStatusBadge" class="pt-0.5"></div>
+
+                <div class="pt-3 border-t border-slate-800 flex gap-2.5">
+                    <button onclick="closeQuickView()" class="w-1/3 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs sm:text-sm transition active:scale-95">
+                        Cerrar
+                    </button>
+                    <a id="modalWhatsappBtn" href="#" target="_blank" 
+                       class="w-2/3 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm text-center flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-500/20 active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span id="modalWhatsappText">Pedir por WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LIGHTBOX / PANTALLA COMPLETA PARA VER LA FOTO EN ALTA DEFINICIÓN -->
+    <div id="lightboxModal" class="fixed inset-0 bg-black/95 backdrop-blur-md hidden items-center justify-center p-2 sm:p-6 z-[60] cursor-zoom-out" onclick="closeLightbox()">
+        <button type="button" onclick="closeLightbox()" class="absolute top-4 right-4 w-11 h-11 rounded-full bg-slate-900/90 text-white flex items-center justify-center text-lg z-10 border border-slate-700 shadow-xl hover:bg-slate-800 transition active:scale-95">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="relative max-w-5xl max-h-[96vh] w-full h-full flex items-center justify-center" onclick="event.stopPropagation()">
+            <img id="lightboxImg" src="" alt="Foto completa del perfume" class="max-w-full max-h-[92vh] w-auto h-auto object-contain rounded-xl shadow-2xl">
+        </div>
+    </div>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 mt-12 py-8 text-center text-slate-500 text-xs safe-pb">
+        <div class="max-w-7xl mx-auto px-4 space-y-3 flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full overflow-hidden border border-amber-500/40 shadow-lg shadow-amber-500/10 bg-black">
+                <img src="imagenes/logo.png" alt="N&A Logo" class="w-full h-full object-cover">
+            </div>
+            <p class="font-medium text-slate-400 text-xs">
+                ✨ Pedidos y atención rápida directamente al WhatsApp: <strong class="text-amber-400">0412-2959390</strong>
+            </p>
+            <p class="text-[11px] text-slate-500">
+                &copy; <span id="currentYear"></span> <strong>N&A aroma studio</strong>. Todos los derechos reservados.
+            </p>
+            <!-- Acceso discreto para el administrador -->
+            <div class="pt-2">
+                <a href="admin.html" class="inline-flex items-center gap-1.5 text-slate-600 hover:text-amber-400 transition-colors py-1 px-3 rounded-full hover:bg-slate-900 border border-transparent hover:border-slate-800 text-[11px]">
+                    <i class="fa-solid fa-lock text-[9px]"></i>
+                    <span>Acceso Administrador</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT DE DATOS Y COMPORTAMIENTO -->
+    <script src="productos.js?v=2.2"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js?v=1.0"></script>
+    <script>
+        // Estado de la tienda
+        let appData = loadCatalogData();
+        let activeCategory = 'all';
+        let onlyAvailable = false;
+
+        // Formateador y creador de enlaces universales de WhatsApp (funciona en iOS, Android, PC, Mac)
+        function getUniversalWhatsAppUrl(perfume) {
+            const rawPhone = appData.config.phone || "584122959390";
+            const phone = rawPhone.replace(/\D/g, '');
+            const isAvailable = perfume.status !== 'agotado';
+
+            const priceBsText = (perfume.priceBs) ? ` (Bs. ${Number(perfume.priceBs).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})` : '';
+
+            let msg = "";
+            if (isAvailable) {
+                msg = `¡Hola! 👋 Vi su catálogo y quiero pedir la colonia:\n\n` +
+                      `🧴 *${perfume.name}*\n` +
+                      `💵 *Precio:* $${Number(perfume.price).toFixed(2)}${priceBsText}\n` +
+                      `🏷️ *Categoría:* ${perfume.category || 'Colonia'}\n\n` +
+                      `¿Tienen disponibilidad para coordinar la entrega? Gracias.`;
+            } else {
+                msg = `¡Hola! 👋 Vi en su catálogo que la colonia *${perfume.name}* está agotada.\n` +
+                      `¿Cuándo les vuelve a llegar o qué otra parecida me recomiendan? Gracias.`;
+            }
+
+            // api.whatsapp.com es el estándar más compatible en iOS Safari, Android Chrome y Desktop
+            return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+        }
+
+        // Aplicar configuración general
+        function applyStoreConfig() {
+            if (appData.config) {
+                if (appData.config.storeName) {
+                    document.getElementById('headerStoreName').textContent = appData.config.storeName;
+                    document.title = appData.config.storeName + " - Catálogo";
+                }
+                if (appData.config.tagline) {
+                    document.getElementById('headerTagline').textContent = appData.config.tagline;
+                }
+                const phone = appData.config.phone || "584122959390";
+                const generalMsg = encodeURIComponent("¡Hola! 👋 Quisiera más información sobre su catálogo de perfumes.");
+                const generalUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${generalMsg}`;
+                
+                document.getElementById('btnDirectWhatsapp').href = generalUrl;
+                document.getElementById('floatingWhatsappBtn').href = generalUrl;
+            }
+        }
+
+        // Crear tarjeta responsiva para el catálogo
+        function createPerfumeCard(p) {
+            const isAvailable = p.status !== 'agotado';
+            const whatsappUrl = getUniversalWhatsAppUrl(p);
+            const fallbackImage = 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600';
+
+            // Badge
+            let badgeHtml = '';
+            if (!isAvailable) {
+                badgeHtml = `<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-600 text-white shadow uppercase tracking-wide">
+                                Agotado
+                             </span>`;
+            } else if (p.badge) {
+                let color = 'bg-amber-500 text-slate-950';
+                if (p.badge.toLowerCase().includes('nuevo')) color = 'bg-indigo-600 text-white';
+                if (p.badge.toLowerCase().includes('oferta')) color = 'bg-rose-600 text-white';
+
+                badgeHtml = `<span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${color} shadow uppercase tracking-wide">
+                                ✨ ${p.badge}
+                             </span>`;
+            }
+
+            return `
+                <div class="group bg-slate-900 border ${isAvailable ? 'border-slate-800 hover:border-amber-400/50' : 'border-slate-800/60 opacity-85'} rounded-2xl overflow-hidden shadow-md flex flex-col justify-between transition-all duration-200">
+                    
+                    <!-- Imagen de la colonia -->
+                    <div class="relative aspect-square w-full bg-slate-950 overflow-hidden perfume-img-container cursor-pointer" onclick="openQuickView('${p.id}')">
+                        <img src="${p.image || fallbackImage}" 
+                             alt="${p.name}" 
+                             loading="lazy"
+                             onerror="this.src='${fallbackImage}'"
+                             class="perfume-img w-full h-full object-cover transition-transform duration-300 ${!isAvailable ? 'grayscale-[40%]' : ''}">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none"></div>
+
+                        <!-- Badge esquina -->
+                        <div class="absolute top-2.5 left-2.5 z-10">
+                            ${badgeHtml}
+                        </div>
+
+                        <!-- Ícono Ver más -->
+                        <button type="button" class="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-full bg-slate-900/80 text-slate-300 flex items-center justify-center text-xs opacity-80 group-hover:opacity-100 shadow">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <!-- Datos del producto -->
+                    <div class="p-3.5 sm:p-4 flex flex-col flex-grow justify-between gap-3">
+                        <div>
+                            <div class="flex items-center justify-between gap-1 mb-1">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 uppercase">
+                                    ${p.category || 'Colonia'}
+                                </span>
+                                
+                                ${isAvailable 
+                                    ? `<span class="text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Disponible
+                                       </span>`
+                                    : `<span class="text-[10px] font-bold text-rose-400 flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Agotado
+                                       </span>`
+                                }
+                            </div>
+
+                            <h3 class="font-bold text-white text-sm sm:text-base leading-snug line-clamp-2 mt-1">
+                                ${p.name}
+                            </h3>
+
+                            ${p.description ? `
+                                <p class="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                                    ${p.description}
+                                </p>
+                            ` : ''}
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-800/80">
+                            <div class="flex items-end justify-between mb-2.5">
+                                <div>
+                                    <span class="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Precio</span>
+                                    ${p.priceBs ? `
+                                        <span class="text-xs sm:text-sm font-bold text-emerald-400 block mt-0.5 leading-none">
+                                            Bs. ${Number(p.priceBs).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xl sm:text-2xl font-black text-amber-400 leading-none">
+                                        $${Number(p.price).toFixed(2)}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón de compra o consulta por WhatsApp -->
+                            ${isAvailable ? `
+                                <a href="${whatsappUrl}" target="_blank" 
+                                   class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow transition active:scale-95">
+                                    <i class="fa-brands fa-whatsapp text-base"></i>
+                                    <span>Pedir por WhatsApp</span>
+                                </a>
+                            ` : `
+                                <a href="${whatsappUrl}" target="_blank" 
+                                   class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold text-[11px] flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-brands fa-whatsapp text-sm text-emerald-400"></i>
+                                    <span>Consultar al WhatsApp</span>
+                                </a>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Aplicar filtros
+        function applyFilters() {
+            const searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+            const clearBtn = document.getElementById('clearSearchBtn');
+            clearBtn.classList.toggle('hidden', searchQuery === '');
+
+            let filtered = appData.perfumes.filter(p => {
+                const matchesSearch = !searchQuery || 
+                    (p.name && p.name.toLowerCase().includes(searchQuery)) ||
+                    (p.category && p.category.toLowerCase().includes(searchQuery)) ||
+                    (p.description && p.description.toLowerCase().includes(searchQuery));
+
+                const matchesCategory = (activeCategory === 'all') || (p.category === activeCategory);
+                const matchesStock = !onlyAvailable || (p.status !== 'agotado');
+
+                return matchesSearch && matchesCategory && matchesStock;
+            });
+
+            const grid = document.getElementById('perfumeGrid');
+            const noResults = document.getElementById('noResults');
+            const countElem = document.getElementById('resultsCount');
+            const countMobile = document.getElementById('resultsCountMobile');
+
+            countElem.textContent = filtered.length;
+            countMobile.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+                grid.innerHTML = filtered.map(createPerfumeCard).join('');
+            }
+        }
+
+        function setCategoryFilter(category) {
+            activeCategory = category;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.category === category) {
+                    btn.className = 'filter-btn active-category px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition border border-amber-500 bg-amber-500 text-slate-950 shadow-md active:scale-95 flex-shrink-0';
+                } else {
+                    btn.className = 'filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition border border-slate-800 bg-slate-900/90 text-slate-300 hover:text-white hover:border-slate-700 active:scale-95 flex-shrink-0';
+                }
+            });
+            applyFilters();
+        }
+
+        function toggleOnlyAvailable() {
+            onlyAvailable = !onlyAvailable;
+            const btn = document.getElementById('btnOnlyAvailable');
+            if (onlyAvailable) {
+                btn.className = 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition border border-emerald-400 bg-emerald-500 text-slate-950 flex-shrink-0 flex items-center gap-1.5 shadow-md active:scale-95';
+            } else {
+                btn.className = 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition border border-emerald-500/40 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/40 active:scale-95 flex-shrink-0 flex items-center gap-1.5';
+            }
+            applyFilters();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            applyFilters();
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            onlyAvailable = false;
+            setCategoryFilter('all');
+        }
+
+        // Modal de Vista Rápida
+        function openQuickView(perfumeId) {
+            const p = appData.perfumes.find(item => item.id === perfumeId);
+            if (!p) return;
+
+            const isAvailable = p.status !== 'agotado';
+            const modal = document.getElementById('quickViewModal');
+            const fallbackImage = 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600';
+            const perfumeImg = p.image || fallbackImage;
+
+            document.getElementById('modalImg').src = perfumeImg;
+            const bgImg = document.getElementById('modalImgBg');
+            if (bgImg) bgImg.src = perfumeImg;
+
+            document.getElementById('modalName').textContent = p.name;
+            const priceBsHtml = (p.priceBs) ? ` <span class="text-emerald-400 text-xs sm:text-sm font-bold block sm:inline ml-0 sm:ml-2">/ Bs. ${Number(p.priceBs).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>` : '';
+            document.getElementById('modalPrice').innerHTML = `$${Number(p.price).toFixed(2)}${priceBsHtml}`;
+            document.getElementById('modalCategory').textContent = p.category || 'Colonia';
+            document.getElementById('modalDescription').textContent = p.description || 'Fragancia exclusiva de alta concentración inspirada en marcas internacionales de lujo.';
+
+            const badgeContainer = document.getElementById('modalBadgeContainer');
+            if (!isAvailable) {
+                badgeContainer.innerHTML = `<span class="px-2.5 py-1 rounded text-xs font-bold bg-rose-600 text-white shadow uppercase">Agotado</span>`;
+            } else if (p.badge) {
+                badgeContainer.innerHTML = `<span class="px-2.5 py-1 rounded text-xs font-bold bg-amber-500 text-slate-950 shadow uppercase">${p.badge}</span>`;
+            } else {
+                badgeContainer.innerHTML = '';
+            }
+
+            const statusBadge = document.getElementById('modalStatusBadge');
+            if (isAvailable) {
+                statusBadge.innerHTML = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 border border-emerald-700/60 text-emerald-300">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Disponible para entrega inmediata
+                </span>`;
+            } else {
+                statusBadge.innerHTML = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-950 border border-rose-700/60 text-rose-300">
+                    <span class="w-2 h-2 rounded-full bg-rose-500"></span> Agotado temporalmente
+                </span>`;
+            }
+
+            const btn = document.getElementById('modalWhatsappBtn');
+            const btnText = document.getElementById('modalWhatsappText');
+            btn.href = getUniversalWhatsAppUrl(p);
+
+            if (isAvailable) {
+                btnText.textContent = "Pedir por WhatsApp";
+                btn.className = "w-2/3 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm text-center flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-500/20 active:scale-95";
+            } else {
+                btnText.textContent = "Consultar por WhatsApp";
+                btn.className = "w-2/3 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm text-center flex items-center justify-center gap-2 transition active:scale-95";
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // Evita scroll de fondo al abrir modal
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('quickViewModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('quickViewModal').addEventListener('click', (e) => {
+            if (e.target.id === 'quickViewModal') closeQuickView();
+        });
+
+        // Modal Lightbox Pantalla Completa
+        function openLightbox(src) {
+            if (!src) return;
+            const modal = document.getElementById('lightboxModal');
+            document.getElementById('lightboxImg').src = src;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            const quickModal = document.getElementById('quickViewModal');
+            if (quickModal && quickModal.classList.contains('hidden')) {
+                document.body.style.overflow = '';
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const lightbox = document.getElementById('lightboxModal');
+                if (lightbox && !lightbox.classList.contains('hidden')) {
+                    closeLightbox();
+                } else {
+                    closeQuickView();
+                }
+            }
+        });
+
+        // Sincronización en tiempo real
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'perfumes_catalogo_db' || e.key === 'catalogo_config') {
+                appData = loadCatalogData();
+                applyStoreConfig();
+                applyFilters();
+            }
+        });
+
+        // Inicializar con datos locales inmediatos
+        applyStoreConfig();
+        applyFilters();
+
+        // Conectar a la Nube (Firebase) si está configurado para sincronizar en tiempo real
+        if (typeof isFirebaseConfigured === 'function' && isFirebaseConfigured()) {
+            listenToCloudCatalog((cloudData) => {
+                if (cloudData && cloudData.perfumes && Array.isArray(cloudData.perfumes)) {
+                    console.log("☁️ Catálogo actualizado desde la nube.");
+                    appData.perfumes = cloudData.perfumes;
+                    if (cloudData.config) appData.config = cloudData.config;
+                    applyStoreConfig();
+                    applyFilters();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
