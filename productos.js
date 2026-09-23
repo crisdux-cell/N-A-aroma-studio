@@ -11,6 +11,39 @@ const DEFAULT_STORE_CONFIG = {
 
 const INITIAL_PERFUMES = [
     {
+        id: "p_very_sexy_girl",
+        name: "Very Sexy Girl - Very Good Girl by Carolina Herrera",
+        category: "Mujer",
+        price: 6.50,
+        priceBs: null,
+        image: "imagenes/very_sexy_girl.png",
+        description: "Inspiración de Very Good Girl de Carolina Herrera. Exquisito diseño de tacón rojo con notas florales y frutales cautivadoras.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
+        id: "p_919_sexy_women",
+        name: "919 Sexy - 212 Sexy by Carolina Herrera Fem",
+        category: "Mujer",
+        price: 4.50,
+        priceBs: null,
+        image: "imagenes/sexy_919_women.png",
+        description: "Inspiración del seductor 212 Sexy de Carolina Herrera para dama. Fragancia magnética con notas florales, orientales y un toque dulce irresistible.",
+        status: "disponible",
+        badge: "Oferta"
+    },
+    {
+        id: "p_sexy_girl_blush",
+        name: "Sexy Girl Blush - Good Girl Blush by Carolina Herrera",
+        category: "Mujer",
+        price: 6.50,
+        priceBs: null,
+        image: "imagenes/sexy_girl_blush.png",
+        description: "Inspiración de Good Girl Blush de Carolina Herrera. Elegante tacón rosa pastel con tacón aguja dorado, aroma romántico de vainilla y peonía.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
         id: "p_black_addiction",
         name: "Black Addiction - Black Opium Parfum (Yves Saint Laurent)",
         category: "Mujer",
@@ -56,7 +89,7 @@ const INITIAL_PERFUMES = [
     }
 ];
 
-const CATALOGO_VERSION = "2.1";
+const CATALOGO_VERSION = "2.2";
 
 // Función utilitaria para cargar productos con persistencia local
 function loadCatalogData() {
