@@ -11,6 +11,17 @@ const DEFAULT_STORE_CONFIG = {
 
 const INITIAL_PERFUMES = [
     {
+        id: "p_cat_pure",
+        name: "Cat Pure - Purr / Meow (Katy Perry)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/cat_pure.jpg",
+        description: "Inspiración del dulce y coqueto perfume felino Purr / Meow de Katy Perry. Frasco estriado en cristal morado amatista y caja con huellitas y silueta de gatito. Delicioso aroma frutal gourmand con durazno jugoso, manzana roja, gardenia, jazmín, vainilla y coco cremoso.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
         id: "p_barakkat_rouge_540",
         name: "BarakKat Rouge 540 - Baccarat Rouge 540 (MFK)",
         category: "Unisex",
@@ -353,7 +364,7 @@ const INITIAL_PERFUMES = [
     }
 ];
 
-const CATALOGO_VERSION = "2.9";
+const CATALOGO_VERSION = "3.0";
 
 // Función utilitaria para cargar productos con persistencia local
 function loadCatalogData() {
