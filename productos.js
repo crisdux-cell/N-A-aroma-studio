@@ -11,11 +11,55 @@ const DEFAULT_STORE_CONFIG = {
 
 const INITIAL_PERFUMES = [
     {
+        id: "p_sanctity_of_royal",
+        name: "Sanctity of Royal - K by Dolce & Gabbana",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/sanctity_of_royal.jpg",
+        description: "Inspiración de K by Dolce & Gabbana. Majestuoso frasco coronado con notas amaderadas, cítricos del mediterráneo y cedro noble.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
+        id: "p_versace_eros_energy",
+        name: "Versace Eros Energy - Versace Eros pour Homme",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/versace_eros_energy.jpg",
+        description: "Inspiración de Versace Eros Energy con el icónico relieve dorado de Medusa. Fragancia electrizante y cítrica con bergamota italiana, lima ácida, ámbar y pachulí.",
+        status: "disponible",
+        badge: "🔥 Top Ventas"
+    },
+    {
+        id: "p_black_addiction",
+        name: "Black Addiction - Black Opium Parfum (Yves Saint Laurent)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/black_addiction_studio.jpg",
+        description: "Inspiración del icónico Black Opium de Yves Saint Laurent. Aroma seductor con notas de café negro, flores blancas y vainilla dulce.",
+        status: "disponible",
+        badge: "🔥 Más Vendido"
+    },
+    {
+        id: "p_sexy_girl_blush",
+        name: "Sexy Girl Blush - Good Girl Blush by Carolina Herrera",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/sexy_girl_blush_studio.jpg",
+        description: "Inspiración de Good Girl Blush de Carolina Herrera. Elegante tacón rosa pastel con tacón aguja dorado, aroma romántico de vainilla y peonía.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
         id: "p_very_sexy_girl",
         name: "Very Sexy Girl - Very Good Girl by Carolina Herrera",
         category: "Mujer",
-        price: 6.50,
-        priceBs: null,
+        price: 12.00,
+        priceBs: 14700,
         image: "imagenes/very_sexy_girl.png",
         description: "Inspiración de Very Good Girl de Carolina Herrera. Exquisito diseño de tacón rojo con notas florales y frutales cautivadoras.",
         status: "disponible",
@@ -25,41 +69,19 @@ const INITIAL_PERFUMES = [
         id: "p_919_sexy_women",
         name: "919 Sexy - 212 Sexy by Carolina Herrera Fem",
         category: "Mujer",
-        price: 4.50,
-        priceBs: null,
+        price: 12.00,
+        priceBs: 14700,
         image: "imagenes/sexy_919_women.png",
         description: "Inspiración del seductor 212 Sexy de Carolina Herrera para dama. Fragancia magnética con notas florales, orientales y un toque dulce irresistible.",
         status: "disponible",
         badge: "Oferta"
     },
     {
-        id: "p_sexy_girl_blush",
-        name: "Sexy Girl Blush - Good Girl Blush by Carolina Herrera",
-        category: "Mujer",
-        price: 6.50,
-        priceBs: null,
-        image: "imagenes/sexy_girl_blush.png",
-        description: "Inspiración de Good Girl Blush de Carolina Herrera. Elegante tacón rosa pastel con tacón aguja dorado, aroma romántico de vainilla y peonía.",
-        status: "disponible",
-        badge: "✨ Nuevo"
-    },
-    {
-        id: "p_black_addiction",
-        name: "Black Addiction - Black Opium Parfum (Yves Saint Laurent)",
-        category: "Mujer",
-        price: 4.50,
-        priceBs: null,
-        image: "imagenes/black_addiction_clean.png",
-        description: "Inspiración del icónico Black Opium de Yves Saint Laurent. Aroma seductor con notas de café negro, flores blancas y vainilla dulce.",
-        status: "disponible",
-        badge: "Más Vendido"
-    },
-    {
         id: "p_crystalline",
         name: "Crystalline - Good Girl Sparkling Ice (Carolina Herrera)",
         category: "Mujer",
-        price: 6.50,
-        priceBs: null,
+        price: 12.00,
+        priceBs: 14700,
         image: "imagenes/crystalline_good_girl_clean.png",
         description: "Edición especial inspirada en Good Girl Sparkling Ice de Carolina Herrera. Elegante frasco en forma de tacón con aroma floral y dulce cautivador.",
         status: "disponible",
@@ -69,8 +91,8 @@ const INITIAL_PERFUMES = [
         id: "p_galaxy_turquoise",
         name: "Galaxy Turquoise - Dylan Turquoise (Versace Fem)",
         category: "Mujer",
-        price: 5.50,
-        priceBs: null,
+        price: 12.00,
+        priceBs: 14700,
         image: "imagenes/galaxy_turquoise_clean.png",
         description: "Inspiración de Dylan Turquoise de Versace. Aroma cítrico y vibrante con notas de mandarina italiana, maderas doradas y almizcle.",
         status: "disponible",
@@ -80,8 +102,8 @@ const INITIAL_PERFUMES = [
         id: "p_flame_passion",
         name: "Flame Passion - Fame (Paco Rabanne Fem)",
         category: "Mujer",
-        price: 5.00,
-        priceBs: null,
+        price: 12.00,
+        priceBs: 14700,
         image: "imagenes/flame_passion_fame_clean.png",
         description: "Inspiración de la fragancia Fame de Paco Rabanne en su diseño icónico de robot plateado. Exquisita combinación de mango jugoso, jazmín delicado e incienso cremoso.",
         status: "disponible",
@@ -89,7 +111,7 @@ const INITIAL_PERFUMES = [
     }
 ];
 
-const CATALOGO_VERSION = "2.2";
+const CATALOGO_VERSION = "2.3";
 
 // Función utilitaria para cargar productos con persistencia local
 function loadCatalogData() {
