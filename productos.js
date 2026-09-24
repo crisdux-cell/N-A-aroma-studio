@@ -11,6 +11,50 @@ const DEFAULT_STORE_CONFIG = {
 
 const INITIAL_PERFUMES = [
     {
+        id: "p_robot_black",
+        name: "Robot Black - Phantom Parfum (Paco Rabanne)",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/robot_black.jpg",
+        description: "Inspiración del audaz Phantom Parfum de Paco Rabanne en su diseño de robot negro azabache de alta tecnología. Aroma intenso y misterioso con lavanda electrizante, vainilla adictiva y vetiver sensual.",
+        status: "disponible",
+        badge: "🔥 Top Ventas"
+    },
+    {
+        id: "p_black_addiction_dark_red",
+        name: "Black Addiction Dark Red - Black Opium Over Red (YSL)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/black_addiction_dark_red.jpg",
+        description: "Inspiración del embriagador Black Opium Over Red de Yves Saint Laurent. Frasco rojo rubí translúcido con notas de cereza licorosa, café negro tostado, flor de azahar y vainilla bourbon.",
+        status: "disponible",
+        badge: "🔥 Más Vendido"
+    },
+    {
+        id: "p_frenzy_fantasy",
+        name: "Frenzy - Fantasy (Britney Spears)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/frenzy_fantasy.jpg",
+        description: "Inspiración del icónico y dulce Fantasy de Britney Spears. Frasco esférico rosa fucsia con collar de cristales. Aroma gourmand irresistible de kiwi, chocolate blanco, orquídea, cupcake dulce y almizcle.",
+        status: "disponible",
+        badge: "🔥 Más Vendido"
+    },
+    {
+        id: "p_365_day_women",
+        name: "365 Day for Women - 360° (Perry Ellis)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/365_day_women.jpg",
+        description: "Inspiración de la fragancia clásica 360° de Perry Ellis para dama. Frasco estilizado con icónica tapa esférica dorada. Aroma fresco y floral atemporal con lirio de los valles, melón jugoso, rosa, salvia y almizcle.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
         id: "p_lady_gold",
         name: "Lady Gold - Lady Million (Paco Rabanne)",
         category: "Mujer",
@@ -232,7 +276,7 @@ const INITIAL_PERFUMES = [
     }
 ];
 
-const CATALOGO_VERSION = "2.6";
+const CATALOGO_VERSION = "2.7";
 
 // Función utilitaria para cargar productos con persistencia local
 function loadCatalogData() {
