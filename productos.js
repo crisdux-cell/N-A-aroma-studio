@@ -11,6 +11,39 @@ const DEFAULT_STORE_CONFIG = {
 
 const INITIAL_PERFUMES = [
     {
+        id: "p_lady_gold",
+        name: "Lady Gold - Lady Million (Paco Rabanne)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/lady_gold.jpg",
+        description: "Inspiración del icónico diamante dorado Lady Million de Paco Rabanne. Fragancia deslumbrante y seductora con notas de flor de azahar, jazmín sambac, frambuesa jugosa, miel blanca y pachulí.",
+        status: "disponible",
+        badge: "🔥 Top Ventas"
+    },
+    {
+        id: "p_golden_flame",
+        name: "Golden Flame - Fame (Paco Rabanne)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/golden_flame.jpg",
+        description: "Inspiración de Fame de Paco Rabanne en su diseño de robot femenino con gafas oscuras y vestido metálico dorado. Exquisita fusión parisina de mango jugoso, jazmín puro e incienso cremoso.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
+        id: "p_crystalline_herrera",
+        name: "Crystalline - Good Girl (Carolina Herrera)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/crystalline_herrera.jpg",
+        description: "Edición especial Crystalline Herrera inspirada en Good Girl de Carolina Herrera. Elegante tacón de cristal degradado verde a fucsia con tacón aguja dorado. Cautivador aroma de nardos, jazmín, haba tonka y cacao.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
         id: "p_golf_club",
         name: "Golf Club - Polo Ralph Lauren",
         category: "Hombre",
@@ -199,7 +232,7 @@ const INITIAL_PERFUMES = [
     }
 ];
 
-const CATALOGO_VERSION = "2.5";
+const CATALOGO_VERSION = "2.6";
 
 // Función utilitaria para cargar productos con persistencia local
 function loadCatalogData() {
