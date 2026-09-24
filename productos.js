@@ -11,6 +11,50 @@ const DEFAULT_STORE_CONFIG = {
 
 const INITIAL_PERFUMES = [
     {
+        id: "p_golf_club",
+        name: "Golf Club - Polo Ralph Lauren",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/golf_club.jpg",
+        description: "Inspiración de la elegancia clásica de Polo Ralph Lauren. Distinguido frasco blanco con detalles y silueta dorada de golfista. Frescura sofisticada con notas cítricas, madera noble y fondo aromático limpio.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
+        id: "p_vernasa_galaxy_blue",
+        name: "Vernasa Galaxy Blue - Dylan Blue pour Femme (Versace)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/vernasa_galaxy_blue.jpg",
+        description: "Inspiración de Versace Dylan Blue pour Femme en majestuoso frasco ánfora azul zafiro con detalles dorados. Homenaje a la feminidad con manzana granny smith, grosellas negras, jazmín y pachulí.",
+        status: "disponible",
+        badge: "🔥 Más Vendido"
+    },
+    {
+        id: "p_vigorous_flame",
+        name: "Vigorous Flame - Versace Eros Flame",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/vigorous_flame.jpg",
+        description: "Inspiración del ardiente Versace Eros Flame con relieves griegos en rojo pasión. Contraste apasionado y vibrante entre cítricos italianos, pimienta negra, romero, rosas y maderas cálidas.",
+        status: "disponible",
+        badge: "🔥 Top Ventas"
+    },
+    {
+        id: "p_versace_dylan_purple",
+        name: "Versace Dylan Purple - Dylan Purple (Versace)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/versace_dylan_purple.jpg",
+        description: "Inspiración de Versace Dylan Purple con su cautivador frasco ánfora en tono violeta brillante y oro. Una explosión floral y frutal luminosa con pera jugosa, naranja amarga, fresia y cedro elegante.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
         id: "p_sexy_girl_red",
         name: "Sexy Girl Red - Good Girl (Carolina Herrera)",
         category: "Mujer",
@@ -155,7 +199,7 @@ const INITIAL_PERFUMES = [
     }
 ];
 
-const CATALOGO_VERSION = "2.4";
+const CATALOGO_VERSION = "2.5";
 
 // Función utilitaria para cargar productos con persistencia local
 function loadCatalogData() {
