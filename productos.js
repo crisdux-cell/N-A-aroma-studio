@@ -11,6 +11,50 @@ const DEFAULT_STORE_CONFIG = {
 
 const INITIAL_PERFUMES = [
     {
+        id: "p_sexy_girl_red",
+        name: "Sexy Girl Red - Good Girl (Carolina Herrera)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/sexy_girl_red.jpg",
+        description: "Inspiración del icónico frasco de tacón rojo Sexy Girl (Good Girl Carolina Herrera). Fragancia sensual y apasionada con notas florales orientales, frutos rojos y haba tonka.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
+        id: "p_hayati_black",
+        name: "Hayati - Lattafa / Attar Collection",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/hayati_black.jpg",
+        description: "Fragancia árabe de lujo Hayati. Elegante botella negra con detalles dorados. Exquisita estela dulce y amaderada con notas de frambuesa, piña, grosellas negras, vainilla y almizcle blanco.",
+        status: "disponible",
+        badge: "🔥 Árabe Exclusivo"
+    },
+    {
+        id: "p_sparkle_sexy_girl",
+        name: "Sparkle Sexy Girl - Good Girl Midnight (Carolina Herrera)",
+        category: "Mujer",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/sparkle_sexy_girl_purple.jpg",
+        description: "Inspiración del tacón morado escarchado Sparkle Sexy Girl (Good Girl Midnight). Deslumbrante aroma nocturno con flores oscuras, pachulí, jazmín sambac y praliné.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
+        id: "p_robot_revolution",
+        name: "Robot Revolution - Phantom (Paco Rabanne)",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/robot_revolution.jpg",
+        description: "Inspiración de Phantom de Paco Rabanne con diseño futurista de robot. Aroma moderno y energizante con lavanda cremosa, cáscara de limón italiano, pachulí terroso y vainilla.",
+        status: "disponible",
+        badge: "🔥 Top Ventas"
+    },
+    {
         id: "p_sanctity_of_royal",
         name: "Sanctity of Royal - K by Dolce & Gabbana",
         category: "Hombre",
@@ -111,7 +155,7 @@ const INITIAL_PERFUMES = [
     }
 ];
 
-const CATALOGO_VERSION = "2.3";
+const CATALOGO_VERSION = "2.4";
 
 // Función utilitaria para cargar productos con persistencia local
 function loadCatalogData() {
