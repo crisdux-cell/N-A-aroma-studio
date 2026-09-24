@@ -11,6 +11,50 @@ const DEFAULT_STORE_CONFIG = {
 
 const INITIAL_PERFUMES = [
     {
+        id: "p_barakkat_rouge_540",
+        name: "BarakKat Rouge 540 - Baccarat Rouge 540 (MFK)",
+        category: "Unisex",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/barakkat_rouge_540.jpg",
+        description: "Inspiración del legendario perfume de alta gama Baccarat Rouge 540 de Maison Francis Kurkdjian. Majestuosa botella de cristal con etiqueta carmesí y oro sobre mármol. Notas sublimes de azafrán, jazmín, amberwood, resina de abeto y cedro.",
+        status: "disponible",
+        badge: "🔥 Lujo Exclusivo"
+    },
+    {
+        id: "p_lion_versatile",
+        name: "Lion Versatile - Versace Eros pour Homme",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/lion_versatile.jpg",
+        description: "Inspiración de la legendaria fragancia Versace Eros pour Homme con relieves griegos y emblemática Medusa en oro. Fragancia intensa y seductora con menta fresca vibrante, manzana verde caramelizada, haba tonka, ámbar y cedro.",
+        status: "disponible",
+        badge: "🔥 Más Vendido"
+    },
+    {
+        id: "p_dollar_and_dollar",
+        name: "Dollar & Dollar - Dolce & Gabbana Pour Homme",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/dollar_and_dollar.jpg",
+        description: "Inspiración del distinguido y masculino Dolce & Gabbana Pour Homme. Elegante frasco de vidrio puro con tapón azul marino y caja a juego sobre mármol y monedas de oro. Salida cítrica con bergamota, lavanda, tabaco noble, salvia y cedro.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
+        id: "p_robot_silver",
+        name: "Robot Silver - Phantom (Paco Rabanne)",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/robot_silver.jpg",
+        description: "Inspiración de Phantom de Paco Rabanne en su edición de robot plateado con líquido turquesa cristalino y tapón cromado. Fusión futurista de notas cítricas, lavanda cremosa, pachulí terroso y vainilla sensual.",
+        status: "disponible",
+        badge: "🔥 Top Ventas"
+    },
+    {
         id: "p_king_d_creed",
         name: "King-D - Silver Mountain Water / Aventus (Creed)",
         category: "Hombre",
@@ -309,7 +353,7 @@ const INITIAL_PERFUMES = [
     }
 ];
 
-const CATALOGO_VERSION = "2.8";
+const CATALOGO_VERSION = "2.9";
 
 // Función utilitaria para cargar productos con persistencia local
 function loadCatalogData() {
