@@ -11,6 +11,39 @@ const DEFAULT_STORE_CONFIG = {
 
 const INITIAL_PERFUMES = [
     {
+        id: "p_king_d_creed",
+        name: "King-D - Silver Mountain Water / Aventus (Creed)",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/king_d_creed.jpg",
+        description: "Inspiración de la alta perfumería de Creed (Silver Mountain Water / Royal). Majestuoso frasco blanco mate con corona real en oro pulido sobre mármol imperial. Aroma aristocrático y fresco con bergamota, té verde, grosellas negras, sándalo y almizcle.",
+        status: "disponible",
+        badge: "🔥 Lujo Exclusivo"
+    },
+    {
+        id: "p_blue_sport",
+        name: "Blue Sport - Polo Sport (Ralph Lauren)",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/blue_sport.jpg",
+        description: "Inspiración del legendario Polo Sport de Ralph Lauren. Frasco azul cobalto deportivo con tapón plateado texturizado. Explosión de energía atlética y frescura marina con menta, cítricos, lavanda, jengibre y maderas nobles.",
+        status: "disponible",
+        badge: "🔥 Top Ventas"
+    },
+    {
+        id: "p_navy_blue",
+        name: "Navy Blue - Nautica Voyage / Polo Blue",
+        category: "Hombre",
+        price: 12.00,
+        priceBs: 14700,
+        image: "imagenes/navy_blue.jpg",
+        description: "Inspiración de Nautica Voyage y la frescura marina de Polo Blue. Frasco de diseño náutico con líquido azul océano sobre pizarra y brújula marina. Sensación vigorizante con notas marinas, manzana verde, flor de loto, cedro y almizcle.",
+        status: "disponible",
+        badge: "✨ Nuevo"
+    },
+    {
         id: "p_robot_black",
         name: "Robot Black - Phantom Parfum (Paco Rabanne)",
         category: "Hombre",
@@ -276,7 +309,7 @@ const INITIAL_PERFUMES = [
     }
 ];
 
-const CATALOGO_VERSION = "2.7";
+const CATALOGO_VERSION = "2.8";
 
 // Función utilitaria para cargar productos con persistencia local
 function loadCatalogData() {
